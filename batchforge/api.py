@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from batchforge.runner import run_dag
+from runner import run_dag
 from batchforge.db import SessionLocal
 from batchforge.models import DAGRun, TaskRun
 
