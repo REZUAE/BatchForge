@@ -75,3 +75,8 @@ def run_dag(dag_path):
 
 if __name__ == "__main__":
     run_dag("dags/example_dag.yaml")
+    #test
+    # run_dag("dags/hello_world.yaml")
+    # run_dag("dags/hello_world_with_retries.yaml")
+    # run_dag("dags/hello_world_with_max_active_runs.yaml")
+    # run_dag("dags/hello_world_with_max_active_tasks.yaml")
