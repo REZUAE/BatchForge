@@ -1,10 +1,12 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14
     environment:
-      POSTGRES_USER: batchforge
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: batchforge_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
@@ -17,7 +19,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://batchforge:password123@db:5432/batchforge_db
+      - DATABASE_URL=${DATABASE_URL}
     volumes:
       - .:/app
 

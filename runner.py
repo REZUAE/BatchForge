@@ -32,18 +32,36 @@ def run_dag(dag_path):
         db.commit()
         db.refresh(task_run)
 
-        result = subprocess.run(task["command"], shell=True)
+        max_retries = task.get("max_retries", 0)
+        attempts = 0
+        success = False
 
-        task_run.finished_at = datetime.now()
-        if result.returncode == 0:
+        while attempts <= max_retries:
+            print(f"  ▶️ Attempt {attempts + 1} of {max_retries + 1}")
+            result = subprocess.run(task["command"], shell=True)
+            task_run.retries = attempts
+            attempts += 1
+
+            if result.returncode == 0:
+                success = True
+                break
+            else:
+                print(f"  🔁 Task {task['id']} failed (attempt {attempts})")
+                if attempts <= max_retries:
+                    print("  ⏳ Retrying...")
+
+        task_run.finished_at = datetime.utcnow()
+
+        if success:
             task_run.status = "success"
             print(f"✅ Task {task['id']} succeeded.")
         else:
             task_run.status = "failed"
             all_tasks_success = False
-            print(f"❌ Task {task['id']} failed.")
+            print(f"❌ Task {task['id']} failed after {attempts} attempt(s).")
             db.commit()
             break
+
 
         db.commit()
 
